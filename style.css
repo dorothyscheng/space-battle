@@ -1,0 +1,97 @@
+/* RESET */
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+button {
+    border: none;
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 5px;
+    font-family: 'Press Start 2P', cursive;
+}
+
+body {
+    background-image: url("https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1970&q=80");
+    color: #fff;
+    font-family: 'Press Start 2P', cursive;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: space-around;
+}
+
+.alien-section {
+    display: none;
+    flex-direction: column;
+    align-content: space-around;
+    padding: 20px 0;
+    /* border: 1px solid yellow; */
+}
+
+.alien-title {
+    margin-bottom: 20px;
+}
+
+.alien-ships-div {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.fa-meteor {
+    color: orange;
+    font-size: 50px;
+}
+
+.player-section {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    font-size: 20px;
+    width: 1000px;
+    /* border: 1px solid red; */
+}
+
+.player-controls {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.ship-name {
+    margin: 20px 0;
+}
+
+.stats {
+    margin: 10px 30px;
+    line-height: 30px;
+}
+
+.missile-button {
+    font-size: 20px;
+}
+
+.missile-button:hover {
+    background-color: red;
+}
+
+.retreat {
+    width: 150px;
+}

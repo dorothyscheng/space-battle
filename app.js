@@ -1,3 +1,21 @@
+const header=$(".header");
+const main=$(".main");
+const startForm = $(".start-form");
+const startButton = $(".start-button");
+const shipName = $("#ship-name");
+const playerSection=$(".player-section");
+const alienSection=$(".alien-section");
+const alienShipsDiv=$(".alien-ships-div");
+const playerShipName=$(".ship-name");
+const playerMissile=$(".missile-text");
+const playerHull=$(".hull-text");
+const playerAccuracy=$(".accuracy-text");
+const playerFire=$(".firepower-text");
+const shieldText=$(".shield-text");
+const playerTitle=$(".player-title");
+const alienTitle=$(".alien-title");
+const missileButton=$(".missile-button");
+
 class Ship {
     constructor(name, hull, firepower, accuracy) {
         this.name=name;
@@ -12,8 +30,8 @@ class GoodGuy extends Ship {
         this.missileNum = Math.ceil(Math.random()*4);
         this.useMissile=false;
         GoodGuy.player=this;
-        console.log(`Below are your ship stats. Your missiles do 2x firepower damage - but you have a limited number to use.`)
-        game.displayStats();
+        // console.log(`Below are your ship stats. Your missiles do 2x firepower damage - but you have a limited number to use.`)
+        // game.displayStats();
         startGame();
     }
     attackAlien=attackAlien;
@@ -42,13 +60,35 @@ const game = {
             Missiles: ${GoodGuy.player.missileNum}`);
     },
 }
+function updateStats() {
+    let player=GoodGuy.player;
+    playerHull.text(player.hull);
+    playerAccuracy.text(player.accuracy);
+    playerFire.text(player.firepower);
+    playerMissile.text(player.missileNum);
+};
+
 function startGame() {
+    let player=GoodGuy.player;
+    startForm.hide();
+    playerShipName.text(player.name);
+    updateStats();
+    main.css("height","100vh");
+    header.css("justify-self","flex-start");
+    header.css("margin-top","20px");
+    playerSection.css("display","flex");
+    alienSection.css("display","flex");
     for (let i=0; i<Alien.alienMax; i++) {
         new Alien;
+        let alien=$('<i class="fas fa-meteor"></i>');
+        alien.appendTo(alienShipsDiv);
     };
-    console.log(`You see ${Alien.alienMax} alien ships coming at ${GoodGuy.player.name}!`);
-    game.logAlienShips();
-    console.log(`To load a missile for your next attack, run missile(). To attack a ship, run attack(number) - use the number from the ship's name. To retreat, run retreat()`);
+    alienTitle.text(`You see ${Alien.alienMax} alien ships coming at ${GoodGuy.player.name}!`);
+    // console.log(`You see ${Alien.alienMax} alien ships coming at ${GoodGuy.player.name}!`);
+    // game.logAlienShips();
+    missileButton.on("click",missile);
+    playerTitle.text(`Missiles increase your firepower 2x - but you have a limited number! To attack a ship, run attack(number) - use the number from the ship's name. To retreat, run retreat().`);
+    // console.log(`To load a missile for your next attack, run missile(). To attack a ship, run attack(number) - use the number from the ship's name. To retreat, run retreat()`);
 };
 // PLAYER ATTACKS
 function attack(x) {
@@ -121,9 +161,11 @@ function randomAlienAttack() {
     if (GoodGuy.player.hull<=0) {
         endGame();
     } else {
-        game.displayStats();
-        game.logAlienShips();
-        console.log(`To load a missile for your next attack, run missile(). To attack another ship, run attack(number) - use the number from the ship's name.`);
+        // game.displayStats();
+        updateStats();
+        missileButton.on("click",missile());
+        // game.logAlienShips();
+        // console.log(`To load a missile for your next attack, run missile(). To attack another ship, run attack(number) - use the number from the ship's name.`);
     };
 }
 // END GAME FUNCTIONS
@@ -141,60 +183,37 @@ function retreat() {
 function shields(x) {
     if (this.hull<20) {
         this.hull += Math.ceil(Math.random()*x);
+        shieldText.css("color","yellow");
+        setTimeout(function() {
+            shieldText.css("color","white");
+        },3000);
         console.log(`Your shields blocked some of the damage. Your current hull strength is ${this.hull}.`);
     };
 };
 function missile() {
+    missileButton.off("click",missile);
     if (GoodGuy.player.missileNum>0) {
         GoodGuy.player.useMissile=true;
         GoodGuy.player.missileNum--;
-        console.log(`Missle loaded. Run attack(number) to attack for 2x firepower!`)
+        missileButton.css("background-color","red");
+        updateStats();
+        // console.log(`Missle loaded. Run attack(number) to attack for 2x firepower!`)
     } else {
-        console.log(`Oh no - you're out of missiles!`)
+        playerTitle.text(`No missiles remaining.`);
+        // console.log(`Oh no - you're out of missiles!`)
     };
-}
+};
 // SET UP INSTRUCTIONS
 console.log(`To create your ship and start the game, run: new GoodGuy("YOUR SHIP NAME")`);
+// EVENT LISTENERS
+shipName.on("click",function() {
+    $(this).val("");
+});
 
-
-
-
-/////////////// VERSION 1 CODE ////////////////////////////////////////////////////////////
-// function attack(target) {
-//     if (Alien.alienShips[Alien.alienNum-1].hull>0) {
-//         let winner;
-//         if (Math.random() < this.accuracy) {
-//             target.hull -= this.firepower;
-//             if (target.hull<=0) {
-//                 winner = this;
-//                 console.log(`${this.name} destroyed ${target.name}!`);
-//             } else {
-//                 console.log(`${this.name} attacked ${target.name} for ${this.firepower} damage. ${target.name} has ${target.hull} hull strength remaining.`);
-//             };
-//         } else {
-//             console.log(`${this.name} attacked ${target.name} but it missed!`);
-//         };
-//         if (this.hull>0 && target.hull>0) {
-//             target.attack(this);
-//         } else if (Alien.alienNum===Alien.alienMax || ussAssembly.hull<=0) {
-//             endGame();
-//         } else if (winner===ussAssembly) {
-//             console.log(`You have the choice to attack another alien ship or retreat.
-//             To attack, run newAlien()
-//             To retreat, run retreat()`);
-//         };
-//     } else {
-//         newAlien();
-//     };
-// };
-
-// function newAlien() {
-//     if (ussAssembly.hull<=0) {
-//         endGame();
-//     } else if (Alien.alienNum<Alien.alienMax) {
-//         let ship = new Alien;
-//         ussAssembly.attack(ship);
-//     } else {
-//         endGame();
-//     };
-// };
+startButton.on("click",function(e) {
+    e.preventDefault();
+    if(shipName.val().trim() !== "") {
+        let name = shipName.val().trim();
+        new GoodGuy(name);
+    };
+});

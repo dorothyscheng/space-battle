@@ -4,11 +4,50 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="./style.css">
+    <!-- JQUERY -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <!-- Main JS -->
-    <script src="./app.js"></script>
+    <script src="./app.js" defer></script>
     <title>Space Battle</title>
 </head>
 <body>
-    <h1>Space Battle</h1>
+    <header class="header">
+        <h1 class="title">SPACE BATTLE</h1>
+    </header>
+    <main class="main">
+        <form class="start-form">
+            <input id="ship-name" type="text" value="Your Ship Name">
+            <button class="start-button">Start</button>
+        </form>
+
+        <div class="alien-section" data-state="visible">
+            <h2 class="alien-title">Alien ships attacking!</h2>
+            <div class="alien-ships-div"></div>
+        </div>
+
+        <div class="player-section">
+            <h3 class="ship-name"></h3>
+            <p class="player-title"></p>
+            <div class="player-controls">
+                <p class="shield-text">Shields Firing</p>
+                <div class="stats">
+                    <p class="hull-title">Hull Strength: <span class="hull-text"></span></p>
+                    <p class="firepower-title">Firepower: <span class="firepower-text"></span></p>
+                    <p class="missile-title">Missiles: <span class="missile-text"></span></p>
+                    <p class="accuracy-title">Accuracy: <span class="accuracy-text"></span></p>
+                </div>
+                <button class="missile-button">Load Missile</button>
+            </div>
+            <button class="retreat">Retreat</button>
+        </div>
+
+    </main>
 </body>
 </html>
