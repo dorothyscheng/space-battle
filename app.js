@@ -190,23 +190,25 @@ function randomAlienAttack() {
 }
 // END GAME FUNCTIONS
 function endGame() {
+    // main.fadeOut();
     alienSection.fadeOut();
     playerSection.fadeOut();
     gameMessage.fadeOut();
     alienShipsDiv.empty();
     startButton.text('Play again?');
     shipName.val('Your Ship Name');
-    startForm.fadeIn();
-    if (game.alienShipsDestroyed>=Alien.alienMax) {
-        gameMessage.text(`${GoodGuy.player.name} destroyed all the alien ships! Huzzah!`);
-        gameMessage.fadeIn();
-        game.alienShipsDestroyed=0;
-    } else {
-        gameMessage.text(`${GoodGuy.player.name} was destroyed. All hail the aliens.`);
-        gameMessage.fadeIn();
-        game.alienShipsDestroyed=0;
-    };
-
+    setTimeout(function() {
+        startForm.fadeIn();
+        if (game.alienShipsDestroyed>=Alien.alienMax) {
+            gameMessage.text(`${GoodGuy.player.name} destroyed all the alien ships! Huzzah!`);
+            gameMessage.fadeIn();
+            game.alienShipsDestroyed=0;
+        } else {
+            gameMessage.text(`${GoodGuy.player.name} was destroyed. All hail the aliens.`);
+            gameMessage.fadeIn();
+            game.alienShipsDestroyed=0;
+        };
+    }, 1000);
 };
 function retreat() {
     main.hide();
@@ -245,9 +247,6 @@ shipName.on("click",function () {
 });
 startButton.on("click", e => {
     e.preventDefault();
-    if ($('#end-message')) {
-        $('#end-message').remove();
-    };
     if(shipName.val().trim() !== "") {
         startForm.fadeOut();
         header.fadeOut();
