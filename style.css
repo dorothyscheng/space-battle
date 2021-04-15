@@ -1,4 +1,3 @@
-/* RESET */
 *{
     padding: 0;
     margin: 0;
@@ -10,14 +9,14 @@ button {
     background-color: #fff;
     border-radius: 5px;
     padding: 5px;
-    font-family: 'Press Start 2P', cursive;
+    font-family: 'Press Start 2P', sans-serif;
     cursor: pointer;
 }
 
 body {
     background-image: url("https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1970&q=80");
     color: #fff;
-    font-family: 'Press Start 2P', cursive;
+    font-family: 'Press Start 2P', sans-serif;
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -37,6 +36,12 @@ body {
     align-items: space-around;
 }
 
+#ship-name {
+    height: 30px;
+    font-size: 15px;
+    font-family: 'Press Start 2P', sans-serif;
+}
+
 .start-button:hover {
     background-color: red;
 }
@@ -46,7 +51,6 @@ body {
     flex-direction: column;
     align-content: space-around;
     padding: 20px 0;
-    /* border: 1px solid yellow; */
 }
 
 .alien-ships-div {
@@ -71,6 +75,7 @@ body {
     display: none;
     margin: 20px 0;
     width: 1500px;
+    height: 100px;
     text-align: center;
     line-height: 50px;
 }
@@ -78,16 +83,16 @@ body {
 .player-section {
     display: none;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-around;
     align-content: center;
     font-size: 20px;
     width: 1500px;
+    height: 315px;
     background-color: #fff;
     opacity: .6;
     color: black;
     border-radius: 5px;
-    padding: 20px;
-    /* border: 1px solid red; */
+    padding: 0 20px;
 }
 
 .player-controls {
@@ -98,7 +103,11 @@ body {
 }
 
 .ship-name {
-    margin: 20px 0;
+    margin-bottom: 20px;
+}
+
+.shield-text {
+    padding: 10px;
 }
 
 .stats {
@@ -116,9 +125,11 @@ body {
 }
 
 .retreat {
-    width: 500px;
+    width: 200px;
     border: 4px solid black;
-    display: none;
+    align-self: center;
+    opacity: 0;
+    cursor: default;
 }
 
 .retreat:hover {

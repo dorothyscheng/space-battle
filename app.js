@@ -29,11 +29,9 @@ class Ship {
 class GoodGuy extends Ship {
     constructor(name) {
         super(name,20,5,.7);
-        this.missileNum = Math.ceil(Math.random()*4);
+        this.missileNum = Math.ceil(Math.random()*6);
         this.useMissile=false;
         GoodGuy.player=this;
-        // console.log(`Below are your ship stats. Your missiles do 2x firepower damage - but you have a limited number to use.`)
-        // game.displayStats();
         startGame();
     }
     attackAlien=attackAlien;
@@ -87,14 +85,13 @@ function startGame() {
         alien.appendTo(alienShipsDiv);
         alien.on("click",targetAlien);
     };
-    gameMessage.text(`You see ${Alien.alienMax} alien ships coming at ${GoodGuy.player.name}! Select a ship to attack it.`);
+    gameMessage.text(`You see ${Alien.alienMax} alien ships coming at ${GoodGuy.player.name}! Click a ship to attack it.`);
     gameMessage.show();
     missileButton.on("click",missile);
-    retreatButton.on("click",retreat);
-    retreatButton.hide();
     playerTitle.text(`Missiles increase your firepower 2x - but you have a limited number!`);
 };
 // PLAYER ATTACKS
+// manages click events and calls player attackAlien
 function targetAlien() {
     $(".fa-meteor").off("click",targetAlien);
     let index=parseInt(this.className.charAt(19));
@@ -122,20 +119,25 @@ function attackAlien(index) {
                 target.hull=0;
                 game.alienShipsDestroyed++;
                 if (game.alienShipsDestroyed<Alien.alienMax) {
-                    retreatButton.show();
+                    retreatButton.on("click",retreat);
+                    retreatButton.css("opacity","1");
+                    retreatButton.css("cursor","pointer");
                     let destroyedShip = $(".fa-meteor").eq(index);
                     destroyedShip.toggleClass("destroyed");
                 };
             } else {
                 gameMessage.text(`You did ${this.firepower} damage to ${target.name}. Now the aliens are firing back!`);
+                // I'm not convinced these timeouts are working as intended...
                 setTimeout(randomAlienAttack(),3000);
             };
         } else {
             gameMessage.text(`You missed. Now the aliens are firing back!`);
+            this.useMissile=false;
             setTimeout(randomAlienAttack(),3000);
         };
     } else {
         gameMessage.text(`That ship is already destroyed. Now the aliens are firing back!`);
+        this.useMissile=false;
         setTimeout(randomAlienAttack(),3000);
     };
     if (game.alienShipsDestroyed>=Alien.alienMax) {
@@ -144,18 +146,20 @@ function attackAlien(index) {
 
 };
 // ALIEN ATTACK
+// individual alien attacks called by randomAlienAttack
 function alienAttack(target) {
     if (Math.random() < this.accuracy) {
         if (target.hull>0) {
             target.hull -= this.firepower;
-            // console.log(`${this.name} attacked ${target.name} for ${this.firepower} damage!`);
             target.shields(this.firepower);
         };
     };
 }
-// returns a random index for an existing alien ship
+// runs attacks from a random number of alien ships
 function randomAlienAttack() {
-    retreatButton.hide();
+    retreatButton.off();
+    retreatButton.css("opacity","0");
+    retreatButton.css("cursor","default");
     // possibleAliens is an array consisting of indexes of existing aliens
     let possibleAliens=[];
     Alien.alienShips.forEach((element,index) => {
@@ -207,26 +211,27 @@ function shields(x) {
         },3000);
     };
 };
+// This kept firing multiple times so added a conditional check...but still not sure why it doesn't work without that.
 function missile() {
-    // e.stopPropagation();
     missileButton.off();
-    if (GoodGuy.player.missileNum>0) {
-        GoodGuy.player.useMissile=true;
-        GoodGuy.player.missileNum--;
-        missileButton.attr("data-state","selected");
-        updateStats();
-    } else {
-        gameMessage.text(`No missiles remaining.`);
-        setTimeout(function() {
-            gameMessage.text('Select a ship for your next attack.');
-        },1500);
+    if (!GoodGuy.player.useMissile) {
+        if (GoodGuy.player.missileNum>0) {
+            GoodGuy.player.useMissile=true;
+            GoodGuy.player.missileNum--;
+            missileButton.attr("data-state","selected");
+            updateStats();
+        } else {
+            gameMessage.text(`No missiles remaining.`);
+            setTimeout(function() {
+                gameMessage.text('Select a ship for your next attack.');
+            },1500);
+        };
     };
 };
 // EVENT LISTENERS
 shipName.on("click",function () {
     $(this).val("");
 });
-
 startButton.on("click", e => {
     e.preventDefault();
     if(shipName.val().trim() !== "") {
