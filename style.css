@@ -37,16 +37,16 @@ body {
     align-items: space-around;
 }
 
+.start-button:hover {
+    background-color: red;
+}
+
 .alien-section {
     display: none;
     flex-direction: column;
     align-content: space-around;
     padding: 20px 0;
     /* border: 1px solid yellow; */
-}
-
-.alien-title {
-    margin-bottom: 20px;
 }
 
 .alien-ships-div {
@@ -57,6 +57,22 @@ body {
 .fa-meteor {
     color: orange;
     font-size: 50px;
+}
+
+.fa-meteor:hover {
+    cursor: pointer;
+}
+
+.destroyed {
+    color: gray;
+}
+
+.game-message {
+    display: none;
+    margin: 20px 0;
+    width: 1500px;
+    text-align: center;
+    line-height: 50px;
 }
 
 .player-section {
@@ -113,6 +129,6 @@ body {
     color: red;
 }
 
-[data-state="destroyed"] {
-    color: gray;
+[data-state="selected"] {
+    background-color: red;
 }
