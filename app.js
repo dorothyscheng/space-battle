@@ -46,7 +46,7 @@ class Alien extends Ship {
     };
     static alienNum=0;
     static alienShips=[];
-    static alienMax=Math.floor(Math.random()*5)+6;
+    static alienMax;
     alienAttack=alienAttack;
 }
 const game = {
@@ -190,7 +190,6 @@ function randomAlienAttack() {
 }
 // END GAME FUNCTIONS
 function endGame() {
-    // main.fadeOut();
     alienSection.fadeOut();
     playerSection.fadeOut();
     gameMessage.fadeOut();
@@ -211,8 +210,18 @@ function endGame() {
     }, 1000);
 };
 function retreat() {
-    main.hide();
-    headerTitle.text("You decided to retreat. All hail the aliens.");
+    alienSection.fadeOut();
+    playerSection.fadeOut();
+    gameMessage.fadeOut();
+    alienShipsDiv.empty();
+    startButton.text('Play again?');
+    shipName.val('Your Ship Name');
+    setTimeout(function() {
+        startForm.fadeIn();
+        gameMessage.text(`${GoodGuy.player.name} retreated to fight again another day.`);
+        gameMessage.fadeIn();
+        game.alienShipsDestroyed=0;
+    }, 1000);
 };
 // BONUS FUNCTIONS
 function shields(x) {
@@ -251,6 +260,11 @@ startButton.on("click", e => {
         startForm.fadeOut();
         header.fadeOut();
         gameMessage.fadeOut();
+        Alien.alienShips=[];
+        Alien.alienNum=0;
+        Alien.alienMax=Math.floor(Math.random()*5)+6;
+        game.player={}
+        GoodGuy.player={};
         setTimeout(function() {
             let namePlayer = shipName.val().trim();
             new GoodGuy(namePlayer);
