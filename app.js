@@ -51,29 +51,21 @@ class Alien extends Ship {
 }
 const game = {
     alienShipsDestroyed: 0,
-    logAlienShips: function() {Alien.alienShips.forEach(element => console.log(`${element.name}`))},
-    displayStats: function() {
-        console.log(`${GoodGuy.player.name} ship stats:
-            Hull strength: ${GoodGuy.player.hull}
-            Firepower: ${GoodGuy.player.firepower}
-            Accuracy: ${GoodGuy.player.accuracy}
-            Missiles: ${GoodGuy.player.missileNum}`);
+    player: {},
+    updateStats: function updateStats() {
+        playerHull.text(this.player.hull);
+        playerAccuracy.text(this.player.accuracy);
+        playerFire.text(this.player.firepower);
+        playerMissile.text(this.player.missileNum);
     },
-}
-function updateStats() {
-    let player=GoodGuy.player;
-    playerHull.text(player.hull);
-    playerAccuracy.text(player.accuracy);
-    playerFire.text(player.firepower);
-    playerMissile.text(player.missileNum);
 };
-
 function startGame() {
     let player=GoodGuy.player;
     player.missileNum = Math.ceil(Math.random()*Alien.alienMax);
+    game.player=player;
     startForm.hide();
     playerShipName.text(player.name);
-    updateStats();
+    game.updateStats();
     main.css("height","100vh");
     header.css("justify-self","flex-start");
     header.css("margin-top","20px");
@@ -182,7 +174,7 @@ function randomAlienAttack() {
             gameMessage.text(`Hull strength at ${GoodGuy.player.hull}. Select a ship for your next attack.`);
             $(`.fa-meteor`).on("click",targetAlien);
             $(`.fa-meteor`).attr("data-state","neutral");
-            updateStats();
+            game.updateStats();
             missileButton.on("click",missile);
         },3000);
     };
@@ -220,7 +212,7 @@ function missile() {
             GoodGuy.player.useMissile=true;
             GoodGuy.player.missileNum--;
             missileButton.attr("data-state","selected");
-            updateStats();
+            game.updateStats();
         } else {
             gameMessage.text(`No missiles remaining.`);
             setTimeout(function() {
