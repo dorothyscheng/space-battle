@@ -1,4 +1,5 @@
 const header=$(".header");
+const headerTitle=$(".title");
 const main=$(".main");
 const startForm = $(".start-form");
 const startButton = $(".start-button");
@@ -15,6 +16,7 @@ const shieldText=$(".shield-text");
 const playerTitle=$(".player-title");
 const alienTitle=$(".alien-title");
 const missileButton=$(".missile-button");
+const retreatButton=$(".retreat");
 
 class Ship {
     constructor(name, hull, firepower, accuracy) {
@@ -87,7 +89,9 @@ function startGame() {
     // console.log(`You see ${Alien.alienMax} alien ships coming at ${GoodGuy.player.name}!`);
     // game.logAlienShips();
     missileButton.on("click",missile);
-    playerTitle.text(`Missiles increase your firepower 2x - but you have a limited number! To attack a ship, run attack(number) - use the number from the ship's name. To retreat, run retreat().`);
+    retreatButton.on("click",retreat);
+    retreatButton.hide();
+    playerTitle.text(`Missiles increase your firepower 2x - but you have a limited number! To attack a ship, run attack(number) in the console - number corresponds to the order of the ships.`);
     // console.log(`To load a missile for your next attack, run missile(). To attack a ship, run attack(number) - use the number from the ship's name. To retreat, run retreat()`);
 };
 // PLAYER ATTACKS
@@ -114,7 +118,10 @@ function attackAlien(index) {
                 game.alienShipsDestroyed++;
                 game.logAlienShips();
                 if (game.alienShipsDestroyed<Alien.alienMax) {
-                    console.log(`To load a missile for your next attack, run missile(). To attack another ship, run attack(number) - use the number from the ship's name. To retreat, run retreat()`);
+                    retreatButton.show();
+                    let destroyedShip = $(".fa-meteor").eq(index);
+                    destroyedShip.attr("data-state","destroyed");
+                    // console.log(`To load a missile for your next attack, run missile(). To attack another ship, run attack(number) - use the number from the ship's name. To retreat, run retreat()`);
                 };
             } else {
                 console.log(`${this.name} attacked ${target.name} for ${this.firepower} damage.`);
@@ -145,6 +152,7 @@ function alienAttack(target) {
 }
 // returns a random index for an existing alien ship
 function randomAlienAttack() {
+    retreatButton.hide();
     // possibleAliens is an array consisting of indexes of existing aliens
     let possibleAliens=[];
     Alien.alienShips.forEach((element,index) => {
@@ -163,7 +171,7 @@ function randomAlienAttack() {
     } else {
         // game.displayStats();
         updateStats();
-        missileButton.on("click",missile());
+        missileButton.on("click",missile);
         // game.logAlienShips();
         // console.log(`To load a missile for your next attack, run missile(). To attack another ship, run attack(number) - use the number from the ship's name.`);
     };
@@ -173,21 +181,26 @@ function endGame() {
     if (game.alienShipsDestroyed>=Alien.alienMax) {
         console.log(`${GoodGuy.player.name} destroyed all the alien ships! Huzzah!`);
     } else {
+        updateStats();
         console.log(`${GoodGuy.player.name} was destroyed. All hail the aliens.`);
     }
 };
 function retreat() {
-    console.log(`You decided to retreat. All hail the aliens.`)
+    main.hide();
+    headerTitle.text("You decided to retreat. All hail the aliens.");
+    // console.log(`You decided to retreat. All hail the aliens.`)
 };
 // BONUS FUNCTIONS
 function shields(x) {
     if (this.hull<20) {
         this.hull += Math.ceil(Math.random()*x);
-        shieldText.css("color","yellow");
+        shieldText.css("color","red");
+        shieldText.css("border","4px solid red");
         setTimeout(function() {
-            shieldText.css("color","white");
+            shieldText.css("color","black");
+            shieldText.css("border","none");
         },3000);
-        console.log(`Your shields blocked some of the damage. Your current hull strength is ${this.hull}.`);
+        // console.log(`Your shields blocked some of the damage. Your current hull strength is ${this.hull}.`);
     };
 };
 function missile() {
