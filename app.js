@@ -181,12 +181,20 @@ function randomAlienAttack() {
 }
 // END GAME FUNCTIONS
 function endGame() {
-    main.hide();
+    alienShipsDiv.empty();
+    alienSection.hide();
+    playerSection.hide();
+    startButton.text('Play again?');
+    shipName.val('Your Ship Name');
+    startForm.show();
     if (game.alienShipsDestroyed>=Alien.alienMax) {
-        headerTitle.text(`${GoodGuy.player.name} destroyed all the alien ships! Huzzah!`);
+        gameMessage.text(`${GoodGuy.player.name} destroyed all the alien ships! Huzzah!`);
+        game.alienShipsDestroyed=0;
     } else {
-        headerTitle.text(`${GoodGuy.player.name} was destroyed. All hail the aliens.`);
-    }
+        gameMessage.text(`${GoodGuy.player.name} was destroyed. All hail the aliens.`);
+        game.alienShipsDestroyed=0;
+    };
+
 };
 function retreat() {
     main.hide();

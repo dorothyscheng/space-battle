@@ -36,6 +36,11 @@ body {
     align-items: space-around;
 }
 
+.start-form {
+    /* justify-self: center; */
+    align-self: center;
+}
+
 #ship-name {
     height: 30px;
     font-size: 15px;
