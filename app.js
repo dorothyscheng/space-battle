@@ -63,12 +63,15 @@ function startGame() {
     let player=GoodGuy.player;
     player.missileNum = Math.ceil(Math.random()*Alien.alienMax);
     game.player=player;
-    startForm.hide();
+    // startForm.fadeOut();
     playerShipName.text(player.name);
     game.updateStats();
     main.css("height","100vh");
     header.css("justify-self","flex-start");
     header.css("margin-top","20px");
+    header.fadeIn();
+    playerSection.fadeIn();
+    alienSection.fadeIn();    
     playerSection.css("display","flex");
     alienSection.css("display","flex");
     for (let i=0; i<Alien.alienMax; i++) {
@@ -79,7 +82,7 @@ function startGame() {
         alien.on("click",targetAlien);
     };
     gameMessage.text(`You see ${Alien.alienMax} alien ships coming at ${GoodGuy.player.name}! Click a ship to attack it.`);
-    gameMessage.show();
+    gameMessage.fadeIn();
     missileButton.on("click",missile);
     playerTitle.text(`Missiles increase your firepower 2x - but you have a limited number!`);
 };
@@ -92,7 +95,7 @@ function targetAlien() {
 }
 function attackAlien(index) {
     let target = Alien.alienShips[index];
-    missileButton.attr("data-state","neutral");
+    missileButton.attr("data-state","not-selected");
     // sanity check - is the ship destroyed already?
     if (target.hull>0) {
         // Does the shot hit?
@@ -106,7 +109,6 @@ function attackAlien(index) {
             // is the alien ship destroyed?
             if (target.hull<=0) {
                 gameMessage.text(`You destroyed ${target.name}! Attack again or retreat?`);
-                // target.name+=` - DESTROYED`;
                 missileButton.on("click",missile);
                 $(".fa-meteor").on("click",targetAlien);
                 target.hull=0;
@@ -162,18 +164,25 @@ function randomAlienAttack() {
     });
     // Number is how many aliens should attack
     let number = Math.ceil(Math.random()*possibleAliens.length);
+    let attackers=[];
     for (let i=0; i<number; i++) {
-        randomIndex = possibleAliens[Math.floor(Math.random()*possibleAliens.length)]
+        let randomIndex = possibleAliens[Math.floor(Math.random()*possibleAliens.length)]
+        attackers.push(randomIndex);
         Alien.alienShips[randomIndex].alienAttack(GoodGuy.player);
         $(`.alien${randomIndex}`).attr("data-state","attacking");
     };
     if (GoodGuy.player.hull<=0) {
         endGame();
     } else {
+        setTimeout(function() {
+            attackers.forEach(element => {
+                let attackerEl = $(`.alien${element}`);
+                attackerEl.attr("data-state","neutral");
+            });
+        },2500);
         setTimeout(function () {
             gameMessage.text(`Hull strength at ${GoodGuy.player.hull}. Select a ship for your next attack.`);
             $(`.fa-meteor`).on("click",targetAlien);
-            $(`.fa-meteor`).attr("data-state","neutral");
             game.updateStats();
             missileButton.on("click",missile);
         },3000);
@@ -181,17 +190,20 @@ function randomAlienAttack() {
 }
 // END GAME FUNCTIONS
 function endGame() {
+    alienSection.fadeOut();
+    playerSection.fadeOut();
+    gameMessage.fadeOut();
     alienShipsDiv.empty();
-    alienSection.hide();
-    playerSection.hide();
     startButton.text('Play again?');
     shipName.val('Your Ship Name');
-    startForm.show();
+    startForm.fadeIn();
     if (game.alienShipsDestroyed>=Alien.alienMax) {
         gameMessage.text(`${GoodGuy.player.name} destroyed all the alien ships! Huzzah!`);
+        gameMessage.fadeIn();
         game.alienShipsDestroyed=0;
     } else {
         gameMessage.text(`${GoodGuy.player.name} was destroyed. All hail the aliens.`);
+        gameMessage.fadeIn();
         game.alienShipsDestroyed=0;
     };
 
@@ -204,11 +216,9 @@ function retreat() {
 function shields(x) {
     if (this.hull<20) {
         this.hull += Math.ceil(Math.random()*x);
-        shieldText.css("color","red");
-        shieldText.css("border","4px solid red");
+        shieldText.attr("data-state","active");
         setTimeout(function() {
-            shieldText.css("color","black");
-            shieldText.css("border","none");
+            shieldText.attr("data-state","not-active");
         },3000);
     };
 };
@@ -235,8 +245,16 @@ shipName.on("click",function () {
 });
 startButton.on("click", e => {
     e.preventDefault();
+    if ($('#end-message')) {
+        $('#end-message').remove();
+    };
     if(shipName.val().trim() !== "") {
-        let name = shipName.val().trim();
-        new GoodGuy(name);
+        startForm.fadeOut();
+        header.fadeOut();
+        gameMessage.fadeOut();
+        setTimeout(function() {
+            let namePlayer = shipName.val().trim();
+            new GoodGuy(namePlayer);
+        },1000);
     };
 });
