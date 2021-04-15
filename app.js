@@ -29,7 +29,7 @@ class Ship {
 class GoodGuy extends Ship {
     constructor(name) {
         super(name,20,5,.7);
-        this.missileNum = Math.ceil(Math.random()*6);
+        this.missileNum = 0;
         this.useMissile=false;
         GoodGuy.player=this;
         startGame();
@@ -70,6 +70,7 @@ function updateStats() {
 
 function startGame() {
     let player=GoodGuy.player;
+    player.missileNum = Math.ceil(Math.random()*Alien.alienMax);
     startForm.hide();
     playerShipName.text(player.name);
     updateStats();
